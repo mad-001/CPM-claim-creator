@@ -61,6 +61,27 @@ const traderIcon = L.icon({
   popupAnchor: [0, -20],
 });
 
+// Per-trader marker images. Match on the trader's name/entity-class
+// (npcTraderJoel, trader_joel, "Trader Joel", etc. all contain "joel").
+// To use a real photo, just replace the matching img/trader-<who>.png file.
+const traderIcons = ["joel", "jen", "bob", "hugh", "rekt"].reduce((acc, who) => {
+  acc[who] = L.icon({
+    iconUrl: `img/trader-${who}.png`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18],
+  });
+  return acc;
+}, {});
+
+function traderIconFor(name) {
+  const key = (name || "").toLowerCase();
+  for (const who of ["joel", "jen", "bob", "hugh", "rekt"]) {
+    if (key.includes(who)) return traderIcons[who];
+  }
+  return traderIcon; // fallback: orange cart for unknown traders
+}
+
 export default {
   name: "sdtd-map",
   data: function() {
@@ -288,7 +309,7 @@ export default {
           3
         );
         const marker = L.marker([trader.x, trader.z], {
-          icon: traderIcon,
+          icon: traderIconFor(trader.name),
         }).bindPopup(trader.name);
         tradersLayer.addLayer(marker);
         tradersLayer.addLayer(traderRec);
