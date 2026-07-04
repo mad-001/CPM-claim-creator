@@ -32,6 +32,16 @@ const playerIcon = L.icon({
   popupAnchor: [0, -44],
 });
 
+// Special per-player icons, keyed by lowercased in-game name.
+const specialPlayerIcons = {
+  mad: L.icon({
+    iconUrl: "img/player-mad.png",
+    iconSize: [33, 60], // slightly bigger than the rest
+    iconAnchor: [16, 60],
+    popupAnchor: [0, -56],
+  }),
+};
+
 const homeIcon = L.icon({
   iconUrl: "img/home-icon.png",
   iconSize: [25, 25],
@@ -372,14 +382,15 @@ export default {
 
       playersLayer.clearLayers();
       for (const player of currentPlayers) {
-        // Create the player marker & area
+        // Create the player marker & area (special icon for certain players)
+        const special = specialPlayerIcons[(player.name || "").toLowerCase()];
         const marker = L.marker([player.position.x, player.position.z], {
-          icon: playerIcon,
+          icon: special || playerIcon,
         })
           .bindTooltip(player.name, {
             permanent: true,
             direction: "top",
-            offset: [0, -46],
+            offset: [0, special ? -58 : -46],
             className: "player-label",
           })
           .bindPopup(
