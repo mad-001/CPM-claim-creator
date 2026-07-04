@@ -378,7 +378,7 @@ export default {
           .bindTooltip(player.name, {
             permanent: true,
             direction: "top",
-            offset: [0, -26],
+            offset: [0, -12],
             className: "player-label",
           })
           .bindPopup(
