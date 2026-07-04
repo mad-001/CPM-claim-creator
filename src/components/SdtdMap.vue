@@ -47,6 +47,37 @@ const vehicleIcon = L.icon({
   popupAnchor: [0, -20],
 });
 
+// Per-vehicle-type marker images (one per vanilla vehicle).
+const vehicleTypeIcons = [
+  "bicycle",
+  "minibike",
+  "motorcycle",
+  "4x4",
+  "gyrocopter",
+].reduce((acc, type) => {
+  acc[type] = L.icon({
+    iconUrl: `img/vehicle-${type}.png`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+    popupAnchor: [0, -20],
+  });
+  return acc;
+}, {});
+
+// Map a vehicle's entity-class name to a vanilla type. Modded vehicles are
+// matched to their vanilla equivalent (per each vehicle's in-game MapIcon).
+function vehicleIconFor(name) {
+  const k = (name || "").toLowerCase();
+  let type = null;
+  if (k.includes("bicycle")) type = "bicycle";
+  // flying vehicles (incl. modded blimp/helicopter) use the gyrocopter icon
+  else if (k.includes("gyrocopter") || k.includes("flyer") || k.includes("blimp") || k.includes("helicopter")) type = "gyrocopter";
+  else if (k.includes("motorcycle") || k.includes("deathrider")) type = "motorcycle";
+  else if (k.includes("minibike") || k.includes("ghoulcruiser")) type = "minibike";
+  else if (k.includes("4x4") || k.includes("truck") || k.includes("meancar") || k.includes("meanbus")) type = "4x4";
+  return (type && vehicleTypeIcons[type]) || vehicleIcon; // fallback: pink car
+}
+
 const droneIcon = L.icon({
   iconUrl: "img/drone-icon-blue.png",
   iconSize: [30, 30],
@@ -428,7 +459,7 @@ export default {
       vehiclesLayer.clearLayers();
       for (const vehicle of currentVehicles.Vehicles) {
         const marker = L.marker([vehicle.posX, vehicle.posZ], {
-          icon: vehicleIcon,
+          icon: vehicleIconFor(vehicle.name),
         }).bindPopup(
           `Vehicle: ${vehicle.name} <br> Position: ${vehicle.posX} ${
             vehicle.posY
