@@ -40,6 +40,12 @@ const specialPlayerIcons = {
     iconAnchor: [16, 60],
     popupAnchor: [0, -56],
   }),
+  henny: L.icon({
+    iconUrl: "img/player-henny.png",
+    iconSize: [33, 60],
+    iconAnchor: [16, 60],
+    popupAnchor: [0, -56],
+  }),
 };
 
 const homeIcon = L.icon({
