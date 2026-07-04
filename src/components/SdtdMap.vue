@@ -374,11 +374,18 @@ export default {
         // Create the player marker & area
         const marker = L.marker([player.position.x, player.position.z], {
           icon: playerIcon,
-        }).bindPopup(
-          `${player.name} - ${player.steamid} <br> Position: ${
-            player.position.x
-          } ${player.position.y} ${player.position.z}`
-        );
+        })
+          .bindTooltip(player.name, {
+            permanent: true,
+            direction: "top",
+            offset: [0, -26],
+            className: "player-label",
+          })
+          .bindPopup(
+            `${player.name} - ${player.steamid} <br> Position: ${
+              player.position.x
+            } ${player.position.y} ${player.position.z}`
+          );
         playersLayer.addLayer(marker);
       }
       // Show online players on the map by default (checkbox on)
@@ -954,5 +961,21 @@ export default {
   color: white;
   font-size: 1.3em;
   text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
+}
+
+/* Permanent player name labels */
+.player-label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: white;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;
+  text-shadow: 0.08em 0 black, 0 0.08em black, -0.08em 0 black, 0 -0.08em black,
+    0.08em 0.08em black, -0.08em -0.08em black;
+}
+.player-label::before {
+  display: none; /* hide the tooltip pointer arrow */
 }
 </style>
