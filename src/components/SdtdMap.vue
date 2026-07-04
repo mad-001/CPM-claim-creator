@@ -26,11 +26,10 @@ import { setInterval } from "timers";
 import getClaims from "../helpers/getClaims";
 
 const playerIcon = L.icon({
-  iconUrl: "img/marker-survivor.png",
-  iconRetinaUrl: "img/marker-survivor-2x.png",
-  iconSize: [25, 48],
-  iconAnchor: [12, 24],
-  popupAnchor: [0, -20],
+  iconUrl: "img/player-rick.png",
+  iconSize: [19, 48],
+  iconAnchor: [9, 48],
+  popupAnchor: [0, -44],
 });
 
 const homeIcon = L.icon({
@@ -365,10 +364,6 @@ export default {
       }
 
       const currentPlayers = await this.getPlayers();
-      // Steam avatars (id64 -> {url}), refreshed server-side into avatars.json
-      const avatars = await fetch("avatars.json")
-        .then((r) => (r.ok ? r.json() : {}))
-        .catch(() => ({}));
       let playersLayer = this.layers["Online players"];
       if (!playersLayer) {
         this.layers["Online players"] = new L.LayerGroup();
@@ -377,25 +372,14 @@ export default {
 
       playersLayer.clearLayers();
       for (const player of currentPlayers) {
-        // Use the player's Steam avatar when we have one, else the survivor pin
-        const id64 = (player.steamid || "").replace("Steam_", "");
-        const avatarUrl = avatars[id64] && avatars[id64].url;
-        const icon = avatarUrl
-          ? L.divIcon({
-              html: `<img src="${avatarUrl}" class="player-avatar" onerror="this.onerror=null;this.src='img/marker-survivor.png'">`,
-              className: "player-avatar-wrap",
-              iconSize: [40, 40],
-              iconAnchor: [20, 20],
-              popupAnchor: [0, -24],
-            })
-          : playerIcon;
+        // Create the player marker & area
         const marker = L.marker([player.position.x, player.position.z], {
-          icon,
+          icon: playerIcon,
         })
           .bindTooltip(player.name, {
             permanent: true,
             direction: "top",
-            offset: [0, avatarUrl ? -22 : -12],
+            offset: [0, -46],
             className: "player-label",
           })
           .bindPopup(
@@ -1002,20 +986,5 @@ export default {
 }
 .player-label::before {
   display: none; /* hide the tooltip pointer arrow */
-}
-
-/* Circular Steam avatar player markers */
-.player-avatar-wrap {
-  background: transparent;
-  border: none;
-}
-.player-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid white;
-  object-fit: cover;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-  display: block;
 }
 </style>
