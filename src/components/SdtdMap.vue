@@ -81,10 +81,10 @@ function vehicleIconFor(name) {
 }
 
 const droneIcon = L.icon({
-  iconUrl: "img/drone-icon-blue.png",
-  iconSize: [30, 30],
-  iconAnchor: [15, 15],
-  popupAnchor: [0, -15],
+  iconUrl: "img/drone-junkdrone.png",
+  iconSize: [36, 36],
+  iconAnchor: [18, 18],
+  popupAnchor: [0, -18],
 });
 
 const traderIcon = L.icon({
