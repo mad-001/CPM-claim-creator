@@ -64,10 +64,12 @@ const vehicleTypeIcons = [
   return acc;
 }, {});
 
-// Map a vehicle's entity-class name to a vanilla type. Modded vehicles are
-// matched to their vanilla equivalent (per each vehicle's in-game MapIcon).
+// Map a vehicle's display name to a vanilla type. The API sends a string like
+// "Death Rider (Id: 326769)<BR>Owner: X" — take the name part before "(Id" and
+// strip spaces/punctuation so multi-word names ("Death Rider") still match.
+// Modded vehicles map to their vanilla equivalent (per each in-game MapIcon).
 function vehicleIconFor(name) {
-  const k = (name || "").toLowerCase();
+  const k = (name || "").split("(Id")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
   let type = null;
   if (k.includes("bicycle")) type = "bicycle";
   // flying vehicles (incl. modded blimp/helicopter) use the gyrocopter icon
@@ -465,6 +467,13 @@ export default {
 
       vehiclesLayer.clearLayers();
       for (const vehicle of currentVehicles.Vehicles) {
+        // Yellow ring around each vehicle so they stand out on the map
+        const ring = L.circleMarker([vehicle.posX, vehicle.posZ], {
+          radius: 16,
+          color: "#FFEB00",
+          weight: 3,
+          fill: false,
+        });
         const marker = L.marker([vehicle.posX, vehicle.posZ], {
           icon: vehicleIconFor(vehicle.name),
         }).bindPopup(
@@ -472,6 +481,7 @@ export default {
             vehicle.posY
           }  ${vehicle.posZ}`
         );
+        vehiclesLayer.addLayer(ring);
         vehiclesLayer.addLayer(marker);
       }
       // Show vehicles on the map by default (checkbox on)
