@@ -48,14 +48,14 @@ const vehicleIcon = L.icon({
 });
 
 const droneIcon = L.icon({
-  iconUrl: "img/drone-icon-green.png",
-  iconSize: [50, 50],
-  iconAnchor: [12, 24],
-  popupAnchor: [0, -20],
+  iconUrl: "img/drone-icon-blue.png",
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, -15],
 });
 
 const traderIcon = L.icon({
-  iconUrl: "img/shopping-cart.png",
+  iconUrl: "img/shopping-cart-orange.png",
   iconSize: [25, 25],
   iconAnchor: [12, 24],
   popupAnchor: [0, -20],
@@ -211,6 +211,8 @@ export default {
           lcbLayer.addLayer(lcbArea);
         }
       }
+      // Show land claim blocks on the map by default (checkbox on)
+      lcbLayer.addTo(this.map);
       return lcbLayer;
     },
     getPois() {
@@ -282,7 +284,8 @@ export default {
             N: trader.maxz,
           },
           undefined,
-          "green"
+          "#FF7A00",
+          3
         );
         const marker = L.marker([trader.x, trader.z], {
           icon: traderIcon,
@@ -290,6 +293,8 @@ export default {
         tradersLayer.addLayer(marker);
         tradersLayer.addLayer(traderRec);
       }
+      // Show traders on the map by default (checkbox on)
+      tradersLayer.addTo(this.map);
     },
     getPlayers() {
       return fetch(`/api/getplayersonline`)
@@ -324,6 +329,8 @@ export default {
         );
         playersLayer.addLayer(marker);
       }
+      // Show online players on the map by default (checkbox on)
+      playersLayer.addTo(this.map);
       return playersLayer;
     },
     getQuestPoi(filterClaim) {
