@@ -41,14 +41,14 @@ const homeIcon = L.icon({
 });
 
 const vehicleIcon = L.icon({
-  iconUrl: "img/vehicle-icon.png",
+  iconUrl: "img/vehicle-icon-pink.png",
   iconSize: [50, 50],
   iconAnchor: [12, 24],
   popupAnchor: [0, -20],
 });
 
 const droneIcon = L.icon({
-  iconUrl: "img/drone-icon.png",
+  iconUrl: "img/drone-icon-green.png",
   iconSize: [50, 50],
   iconAnchor: [12, 24],
   popupAnchor: [0, -20],
@@ -406,6 +406,8 @@ export default {
         );
         vehiclesLayer.addLayer(marker);
       }
+      // Show vehicles on the map by default (checkbox on)
+      vehiclesLayer.addTo(this.map);
     },
     getDrones() {
       return fetch(`/api/getdrones`)
@@ -439,6 +441,8 @@ export default {
         );
         dronesLayer.addLayer(marker);
       }
+      // Show drones on the map by default (checkbox on)
+      dronesLayer.addTo(this.map);
     },
     getHomes() {
       return fetch(`/api/getplayerhomes`)
@@ -574,7 +578,8 @@ export default {
           const regionRec = this.createClaimRectangle(
             claimDetails,
             "Selected region",
-            "grey"
+            "#00e5ff",
+            3
           );
           regionRec.addTo(this.map);
 
@@ -668,10 +673,10 @@ export default {
       this.layers[claimType] = new L.LayerGroup(rectangles);
       this.layers[claimType].addTo(this.map);
     },
-    createClaimRectangle(claim, type, color) {
+    createClaimRectangle(claim, type, color, weight) {
       const rectangle = L.rectangle([[claim.W, claim.S], [claim.E, claim.N]], {
         color: color || this.activeColor,
-        weight: 1,
+        weight: weight || 1,
       });
       if (type) {
         let popup;
