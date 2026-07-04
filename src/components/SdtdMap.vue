@@ -62,39 +62,6 @@ const vehicleIcon = L.icon({
   popupAnchor: [0, -20],
 });
 
-// Per-vehicle-type marker images (one per vanilla vehicle).
-const vehicleTypeIcons = [
-  "bicycle",
-  "minibike",
-  "motorcycle",
-  "4x4",
-  "gyrocopter",
-].reduce((acc, type) => {
-  acc[type] = L.icon({
-    iconUrl: `img/vehicle-${type}.png`,
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
-    popupAnchor: [0, -20],
-  });
-  return acc;
-}, {});
-
-// Map a vehicle's display name to a vanilla type. The API sends a string like
-// "Death Rider (Id: 326769)<BR>Owner: X" — take the name part before "(Id" and
-// strip spaces/punctuation so multi-word names ("Death Rider") still match.
-// Modded vehicles map to their vanilla equivalent (per each in-game MapIcon).
-function vehicleIconFor(name) {
-  const k = (name || "").split("(Id")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
-  let type = null;
-  if (k.includes("bicycle")) type = "bicycle";
-  // flying vehicles (incl. modded blimp/helicopter) use the gyrocopter icon
-  else if (k.includes("gyrocopter") || k.includes("flyer") || k.includes("blimp") || k.includes("helicopter")) type = "gyrocopter";
-  else if (k.includes("motorcycle") || k.includes("deathrider")) type = "motorcycle";
-  else if (k.includes("minibike") || k.includes("ghoulcruiser")) type = "minibike";
-  else if (k.includes("4x4") || k.includes("truck") || k.includes("meancar") || k.includes("meanbus")) type = "4x4";
-  return (type && vehicleTypeIcons[type]) || vehicleIcon; // fallback: pink car
-}
-
 const droneIcon = L.icon({
   iconUrl: "img/drone-icon-blue.png",
   iconSize: [30, 30],
@@ -483,21 +450,13 @@ export default {
 
       vehiclesLayer.clearLayers();
       for (const vehicle of currentVehicles.Vehicles) {
-        // Yellow ring around each vehicle so they stand out on the map
-        const ring = L.circleMarker([vehicle.posX, vehicle.posZ], {
-          radius: 16,
-          color: "#FFEB00",
-          weight: 3,
-          fill: false,
-        });
         const marker = L.marker([vehicle.posX, vehicle.posZ], {
-          icon: vehicleIconFor(vehicle.name),
+          icon: vehicleIcon,
         }).bindPopup(
           `Vehicle: ${vehicle.name} <br> Position: ${vehicle.posX} ${
             vehicle.posY
           }  ${vehicle.posZ}`
         );
-        vehiclesLayer.addLayer(ring);
         vehiclesLayer.addLayer(marker);
       }
       // Show vehicles on the map by default (checkbox on)
