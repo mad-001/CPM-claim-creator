@@ -67,9 +67,9 @@ const traderIcon = L.icon({
 const traderIcons = ["joel", "jen", "bob", "hugh", "rekt"].reduce((acc, who) => {
   acc[who] = L.icon({
     iconUrl: `img/trader-${who}.png`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-    popupAnchor: [0, -18],
+    iconSize: [48, 56],
+    iconAnchor: [24, 56],
+    popupAnchor: [0, -52],
   });
   return acc;
 }, {});
