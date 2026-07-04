@@ -195,12 +195,14 @@ export default {
       for (const lcbOwner of landClaimData.claimowners) {
         for (const lcb of lcbOwner.claims) {
           // Create the LCB marker & area
-          let claimcolor = lcbOwner.claimactive ? "green" : "red";
+          let claimcolor = lcbOwner.claimactive ? "#2BFF2B" : "#FF2B2B";
           const lcbArea = L.rectangle([
             [lcb.x - claimRadius, lcb.z - claimRadius],
             [lcb.x + claimRadius, lcb.z + claimRadius]],
             {color: claimcolor,
-            weight: 1,
+            weight: 2,
+            fillColor: claimcolor,
+            fillOpacity: 0.2,
           }).bindPopup(
             `${lcbOwner.playername} - ${lcbOwner.steamid} <br> EOS_id: ${lcbOwner.eos_id} <br> Position: ${lcb.x} ${lcb.y} ${lcb.z} <br> Status: ${
               lcbOwner.claimactive ? "Active" : "Inactive"
